@@ -1,0 +1,9 @@
+bots = [
+    {
+        "name" : "Your bot's name",
+        "cape_token" : "Your Cape user token",
+        "cape_admin_token" : "Your Cape admin token (if you want to enable admin commands)",
+        "slack_key" : "Your bot's Slack key",
+        "bot_id" : "Your bot's Slack ID"
+    }
+]
