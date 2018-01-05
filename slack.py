@@ -167,8 +167,7 @@ if __name__ == "__main__":
                             handle_next(channel, bot, clients[bot['slack_key']])
                         else:
                             handle_question(message, channel, bot, clients[bot['slack_key']])
-
-            time.sleep(READ_WEBSOCKET_DELAY)
+                time.sleep(READ_WEBSOCKET_DELAY)
         except Exception as e:
             print("Exception:", e)
             time.sleep(30)
