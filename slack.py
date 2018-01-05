@@ -26,7 +26,9 @@ from slackclient import SlackClient
 from cape.client import CapeClient, CapeException
 
 
+READ_WEBSOCKET_DELAY = 1 # Delay in seconds between reading from firehose
 API_BASE='https://responder.thecape.ai/api'
+
 cc = CapeClient(API_BASE)
 previous_answers = {}
 last_answer = {}
@@ -141,7 +143,6 @@ def parse_slack_output(slack_rtm_output, bot):
 
 
 if __name__ == "__main__":
-    READ_WEBSOCKET_DELAY = 1 # 1 second delay between reading from firehose
     clients = {}
 
     while True:
