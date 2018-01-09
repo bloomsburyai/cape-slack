@@ -125,6 +125,19 @@ def handle_next(channel, bot, slack_client):
                               text="I'm afraid I've run out of answers to that question.", as_user=True)
 
 
+def context(channel, bot, slack_client):
+    if bot['slack_key'] not in previous_answers:
+        return
+    last = last_answer[bot['slack_key']]
+    answers = previous_answers[bot['slack_key']]
+    if last < len(answers) and 'answerContext' in answers[last]:
+        slack_client.api_call("chat.postMessage", channel=channel,
+                              text="%s" % answers[last]['answerContext'], as_user=True)
+    else:
+        slack_client.api_call("chat.postMessage", channel=channel,
+                              text="Sorry, I don't have any more context for that.", as_user=True)
+
+
 def parse_slack_output(slack_rtm_output, bot):
     """
         The Slack Real Time Messaging API is an events firehose.
@@ -166,6 +179,8 @@ if __name__ == "__main__":
                             explain(channel, bot, clients[bot['slack_key']])
                         elif message.lower().startswith(".next"):
                             handle_next(channel, bot, clients[bot['slack_key']])
+                        elif message.lower().startswith(".context"):
+                            context(channel, bot, clients[bot['slack_key']])
                         else:
                             handle_question(message, channel, bot, clients[bot['slack_key']])
                 time.sleep(READ_WEBSOCKET_DELAY)
