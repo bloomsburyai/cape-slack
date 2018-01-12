@@ -64,7 +64,7 @@ def add_saved_reply(message, channel, bot, slack_client):
     try:
         cape_admin_token = bot['cape_admin_token']
         admin_client = CapeClient(API_BASE, admin_token=cape_admin_token)
-        reply_id = admin_client.create_saved_reply(question, answer)['replyId']
+        reply_id = admin_client.add_saved_reply(question, answer)['replyId']
         previous_replies[bot['slack_key']] = reply_id
         slack_client.api_call("chat.postMessage", channel=channel,
                               text="Thanks, I'll remember that!", as_user=True)
