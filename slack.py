@@ -44,6 +44,8 @@ def handle_question(question, channel, bot, slack_client):
         last_answer[bot['slack_key']] = 0
         if answers[0]['sourceType'] == 'saved_reply':
             previous_replies[bot['slack_key']] = answers[0]['sourceId']
+        else:
+            previous_replies[bot['slack_key']] = None
         slack_client.api_call("chat.postMessage", channel=channel,
                               text="%s (confidence: %0.2f)" % (answers[0]['answerText'], answers[0]['confidence']), as_user=True)
     else:
@@ -93,7 +95,7 @@ def explain(channel, bot, slack_client):
 
 
 def add_paraphrase(message, channel, bot, slack_client):
-    if bot['slack_key'] not in previous_replies:
+    if bot['slack_key'] not in previous_replies or previous_replies[bot['slack_key']] is None:
         slack_client.api_call("chat.postMessage", channel=channel,
                               text="Please ask a question or create a new saved reply so that I know what to add a paraphrase to.", as_user=True)
         return
@@ -120,6 +122,10 @@ def handle_next(channel, bot, slack_client):
         slack_client.api_call("chat.postMessage", channel=channel,
                               text="%s (confidence: %0.2f)" % (answers[last]['answerText'], answers[last]['confidence']), as_user=True)
         last_answer[bot['slack_key']] = last
+        if answers[0]['sourceType'] == 'saved_reply':
+            previous_replies[bot['slack_key']] = answers[last]['sourceId']
+        else:
+            previous_replies[bot['slack_key']] = None
     else:
         slack_client.api_call("chat.postMessage", channel=channel,
                               text="I'm afraid I've run out of answers to that question.", as_user=True)
